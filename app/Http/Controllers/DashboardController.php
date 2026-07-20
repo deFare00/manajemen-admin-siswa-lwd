@@ -27,7 +27,10 @@ class DashboardController extends Controller
             ->latest('payment_date')
             ->get();
 
-        $studentsProgress = Student::where('status', 'Aktif')->latest()->get();
+        $studentsProgress = Student::with(['meetingLogs', 'payments'])
+            ->where('status', 'Aktif')
+            ->latest()
+            ->get();
 
         return view('dashboard', compact(
             'activeStudentsCount',

@@ -9,7 +9,7 @@ class StudentController extends Controller
 {
     public function index()
     {
-        return response()->json(Student::latest()->get());
+        return response()->json(Student::with(['meetingLogs', 'payments'])->latest()->get());
     }
 
     public function store(Request $request)

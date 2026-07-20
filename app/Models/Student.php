@@ -47,6 +47,12 @@ class Student extends Model
 
     public function getCompletedSessionsAttribute()
     {
+        if ($this->relationLoaded('meetingLogs')) {
+            $maxSession = $this->meetingLogs->max('session_number') ?? 0;
+            $countSession = $this->meetingLogs->where('attendance_status', 'Hadir')->count();
+            return max($maxSession, $countSession);
+        }
+
         $maxSession = $this->meetingLogs()->max('session_number') ?? 0;
         $countSession = $this->meetingLogs()->where('attendance_status', 'Hadir')->count();
         
@@ -56,7 +62,10 @@ class Student extends Model
     public function getTotalSessionsAttribute()
     {
         if ($this->learning_system === 'Paket') {
-            $paidPackagesCount = $this->payments()->where('payment_status', 'Lunas')->count();
+            $paidPackagesCount = $this->relationLoaded('payments')
+                ? $this->payments->where('payment_status', 'Lunas')->count()
+                : $this->payments()->where('payment_status', 'Lunas')->count();
+
             return $paidPackagesCount > 0 ? ($paidPackagesCount * 8) : 8;
         }
         return 0;
@@ -74,7 +83,10 @@ class Student extends Model
     {
         if ($this->learning_system === 'Paket') {
             $completed = $this->completed_sessions;
-            $paidPackagesCount = $this->payments()->where('payment_status', 'Lunas')->count();
+            $paidPackagesCount = $this->relationLoaded('payments')
+                ? $this->payments->where('payment_status', 'Lunas')->count()
+                : $this->payments()->where('payment_status', 'Lunas')->count();
+
             $totalSessionsBought = $paidPackagesCount > 0 ? ($paidPackagesCount * 8) : 8;
 
             return max(0, $totalSessionsBought - $completed);
