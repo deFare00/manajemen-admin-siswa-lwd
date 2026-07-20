@@ -1,5 +1,9 @@
 <?php
 
+// Fix Vercel Serverless Request URI & Script Name Parsing for API Routes
+$_SERVER['SCRIPT_NAME'] = '/index.php';
+$_SERVER['SCRIPT_FILENAME'] = __DIR__ . '/../public/index.php';
+
 // Fix Vercel Serverless Read-Only Filesystem for Laravel
 $tmpStorage = '/tmp/storage';
 
