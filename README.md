@@ -1,50 +1,32 @@
-# Panduan Deployment Vercel + Supabase PostgreSQL
+# Learning with Defa - Student Management System
 
-Dokumen ini berisi panduan lengkap deployment **Laravel App** ke **Vercel** yang terhubung ke database **Supabase**.
+A web-based dashboard for managing tutoring activities in Learning with Defa.
 
----
+## Features
 
-## 🔑 Kredensial Environment Variables Vercel
+- 👨‍🎓 Student Management
+- 📅 Meeting Management
+- 💰 Payment Tracking
+- 📝 Student Evaluation Notes
+- 📊 Dashboard Overview
 
-Salin seluruh variabel berikut ke bagian **Environment Variables** saat membuat project di Vercel:
+## Tech Stack
 
-| Key | Value |
-| :--- | :--- |
-| `APP_ENV` | `production` |
-| `APP_DEBUG` | `false` |
-| `APP_KEY` | `base64:c3VwZXJzZWNyZXRrZXlmb3JsYXJhdmVsYXBwbGljYXRpb24xMjM=` |
-| `DB_CONNECTION` | `pgsql` |
-| `DB_HOST` | `aws-1-ap-south-1.pooler.supabase.com` |
-| `DB_PORT` | `6543` |
-| `DB_DATABASE` | `postgres` |
-| `DB_USERNAME` | `postgres.jruuwqfqmmjdkclfixbe` |
-| `DB_PASSWORD` | `Defarhan-101` |
-| `DB_SSLMODE` | `require` |
+- Laravel
+- PostgreSQL
+- Tailwind CSS
+- JavaScript
+- Blade Template
 
----
+## Modules
 
-## 🚀 Langkah 1: Push Kode ke GitHub
+- Authentication
+- Student CRUD
+- Meeting Records
+- Payment Management
+- Learning Evaluation
+- Dashboard Analytics
 
-Jalankan perintah berikut di Terminal VS Code Anda:
+## Purpose
 
-```bash
-# 1. Inisialisasi Git local
-git init
-git add .
-git commit -m "Sistem Manajemen Les Privat Coding"
-
-# 2. Hubungkan ke GitHub (Ganti username-anda & repo-anda)
-git branch -M main
-git remote add origin https://github.com/username-anda/repo-anda.git
-git push -u origin main
-```
-
----
-
-## 🌐 Langkah 2: Import & Deploy di Vercel
-
-1. Buka [vercel.com](https://vercel.com) dan login.
-2. Klik tombol **Add New...** > **Project**.
-3. Piliha repositori GitHub Anda.
-4. Buka bagian **Environment Variables**, masukkan 10 variabel di atas.
-5. Klik **Deploy**! Dalam 1-2 menit aplikasi Anda akan aktif secara online.
+This project was developed to simplify tutoring administration by centralizing student data, payments, meeting history, and learning progress into one platform.
