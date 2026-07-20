@@ -1,0 +1,1355 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistem Manajemen Les Privat Coding</title>
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-main: #0f172a;
+      --bg-card: #1e293b;
+      --bg-hover: #334155;
+      --border-color: #334155;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent-blue: #3b82f6;
+      --accent-green: #10b981;
+      --accent-yellow: #f59e0b;
+      --accent-red: #ef4444;
+      --accent-purple: #8b5cf6;
+      --radius: 12px;
+      --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* Sidebar Navigation */
+    .sidebar {
+      width: 260px;
+      background-color: #0b1329;
+      border-right: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      padding: 1.5rem 1rem;
+      flex-shrink: 0;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding-bottom: 1.5rem;
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .brand-icon {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+    }
+
+    .brand-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #ffffff;
+      line-height: 1.2;
+    }
+
+    .brand-subtitle {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .nav-menu {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      flex: 1;
+    }
+
+    .nav-item button {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      padding: 0.85rem 1rem;
+      background: transparent;
+      border: none;
+      border-radius: var(--radius);
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: left;
+    }
+
+    .nav-item button:hover {
+      background-color: var(--bg-hover);
+      color: #ffffff;
+    }
+
+    .nav-item button.active {
+      background: linear-gradient(90deg, rgba(59, 130, 246, 0.2), transparent);
+      border-left: 4px solid var(--accent-blue);
+      color: #ffffff;
+      font-weight: 600;
+    }
+
+    /* Main Content Area */
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      background-color: var(--bg-main);
+    }
+
+    /* Topbar */
+    .topbar {
+      height: 65px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      background-color: #0d1527;
+    }
+
+    .page-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .topbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.6rem 1.2rem;
+      border-radius: var(--radius);
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s ease;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent-blue), #2563eb);
+      color: white;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+    }
+
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      transform: translateY(-1px);
+    }
+
+    .btn-success {
+      background: linear-gradient(135deg, var(--accent-green), #059669);
+      color: white;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+
+    .btn-secondary {
+      background-color: var(--bg-hover);
+      color: var(--text-main);
+    }
+
+    .btn-secondary:hover {
+      background-color: #475569;
+    }
+
+    .btn-danger {
+      background-color: rgba(239, 68, 68, 0.2);
+      color: var(--accent-red);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+    }
+
+    .btn-danger:hover {
+      background-color: var(--accent-red);
+      color: white;
+    }
+
+    .btn-icon-only {
+      padding: 0.6rem;
+      border-radius: 8px;
+    }
+
+    /* Content Body */
+    .content-body {
+      flex: 1;
+      padding: 2rem;
+      overflow-y: auto;
+    }
+
+    .tab-pane {
+      display: none;
+    }
+
+    .tab-pane.active {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Dashboard Metrics Cards */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 2rem;
+    }
+
+    .metric-card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .metric-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+    }
+
+    .card-blue::before { background-color: var(--accent-blue); }
+    .card-green::before { background-color: var(--accent-green); }
+    .card-red::before { background-color: var(--accent-red); }
+    .card-purple::before { background-color: var(--accent-purple); }
+
+    .metric-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .metric-value {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    /* Table Container & Controls */
+    .table-container {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .table-header-bar {
+      padding: 1.25rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border-color);
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .search-filter-box {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex: 1;
+      max-width: 450px;
+    }
+
+    .input-control {
+      width: 100%;
+      padding: 0.65rem 1rem;
+      background-color: #0f172a;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      color: #ffffff;
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.2s ease;
+    }
+
+    .input-control:focus {
+      border-color: var(--accent-blue);
+    }
+
+    select.input-control {
+      cursor: pointer;
+    }
+
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.9rem;
+    }
+
+    .data-table th {
+      background-color: #162032;
+      padding: 0.9rem 1.25rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .data-table td {
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid rgba(51, 65, 85, 0.5);
+      color: var(--text-main);
+      vertical-align: middle;
+    }
+
+    .data-table tbody tr:hover {
+      background-color: rgba(51, 65, 85, 0.4);
+    }
+
+    /* Status Badges */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.25rem 0.65rem;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 600;
+    }
+
+    .badge-success { background-color: rgba(16, 185, 129, 0.15); color: #34d399; }
+    .badge-warning { background-color: rgba(245, 158, 11, 0.15); color: #fbbf24; }
+    .badge-danger { background-color: rgba(239, 68, 68, 0.15); color: #f87171; }
+    .badge-info { background-color: rgba(59, 130, 246, 0.15); color: #60a5fa; }
+
+    /* Modal Component */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.25s ease;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      width: 100%;
+      max-width: 550px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      transform: scale(0.95);
+      transition: transform 0.25s ease;
+    }
+
+    .modal-overlay.active .modal-card {
+      transform: scale(1);
+    }
+
+    .modal-header {
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+    }
+
+    .modal-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.25rem;
+      cursor: pointer;
+    }
+
+    .modal-body {
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      max-height: 70vh;
+      overflow-y: auto;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .form-label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .modal-footer {
+      padding: 1rem 1.5rem;
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.75rem;
+      background-color: #162032;
+    }
+
+    /* Toast Notification */
+    .toast-container {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .toast {
+      padding: 0.9rem 1.25rem;
+      border-radius: var(--radius);
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: #ffffff;
+      box-shadow: var(--shadow);
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      animation: slideIn 0.3s ease;
+    }
+
+    @keyframes slideIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    /* Empty state & Loading */
+    .empty-state {
+      padding: 3rem;
+      text-align: center;
+      color: var(--text-muted);
+    }
+
+    .spinner {
+      border: 3px solid rgba(255,255,255,0.1);
+      border-radius: 50%;
+      border-top: 3px solid var(--accent-blue);
+      width: 24px;
+      height: 24px;
+      animation: spin 0.8s linear infinite;
+      display: inline-block;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="brand">
+      <div class="brand-icon">💻</div>
+      <div>
+        <div class="brand-title">Coding Privat</div>
+        <div class="brand-subtitle">Management System</div>
+      </div>
+    </div>
+    
+    <ul class="nav-menu">
+      <li class="nav-item">
+        <button class="active" onclick="switchTab('dashboard', this)">
+          <span>📊</span> Dashboard
+        </button>
+      </li>
+      <li class="nav-item">
+        <button onclick="switchTab('students', this)">
+          <span>👨‍🎓</span> Data Siswa
+        </button>
+      </li>
+      <li class="nav-item">
+        <button onclick="switchTab('logs', this)">
+          <span>📝</span> Log Pertemuan
+        </button>
+      </li>
+      <li class="nav-item">
+        <button onclick="switchTab('payments', this)">
+          <span>💳</span> Keuangan & Pembayaran
+        </button>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <div class="topbar">
+      <div class="page-title" id="pageTitle">
+        📊 Dashboard Ringkasan
+      </div>
+      <div class="topbar-actions">
+        <button class="btn btn-secondary btn-icon-only" onclick="refreshCurrentTab()" title="Refresh Data">
+          🔄
+        </button>
+        <button class="btn btn-success" onclick="triggerEmailReminders()">
+          ✉️ Pengingat Pembayaran
+        </button>
+      </div>
+    </div>
+
+    <div class="content-body">
+      <!-- 1. DASHBOARD TAB -->
+      <div id="tab-dashboard" class="tab-pane active">
+        <div class="metrics-grid">
+          <div class="metric-card card-blue">
+            <div class="metric-header">Total Siswa Aktif</div>
+            <div class="metric-value" id="dashActiveStudents">-</div>
+          </div>
+          <div class="metric-card card-green">
+            <div class="metric-header">Pendapatan Bulan Ini</div>
+            <div class="metric-value" id="dashMonthlyIncome">-</div>
+          </div>
+          <div class="metric-card card-red">
+            <div class="metric-header">Belum Bayar</div>
+            <div class="metric-value" id="dashUnpaidCount">-</div>
+          </div>
+          <div class="metric-card card-purple">
+            <div class="metric-header">Total Sesi Pertemuan</div>
+            <div class="metric-value" id="dashTotalSessions">-</div>
+          </div>
+        </div>
+
+        <div class="table-container">
+          <div class="table-header-bar">
+            <h3 style="font-size: 1.05rem; font-weight: 700; color: #f87171;">⚠️ Daftar Siswa Menunggu Pembayaran</h3>
+          </div>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Tanggal</th>
+                <th>Nama Siswa</th>
+                <th>Periode / Paket</th>
+                <th>Nominal Tagihan</th>
+                <th>Kontak Email Ortu</th>
+              </tr>
+            </thead>
+            <tbody id="dashUnpaidTableBody">
+              <tr><td colspan="5" class="empty-state"><div class="spinner"></div> Memuat data...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 2. DATA SISWA TAB -->
+      <div id="tab-students" class="tab-pane">
+        <div class="table-container">
+          <div class="table-header-bar">
+            <div class="search-filter-box">
+              <input type="text" class="input-control" id="searchStudent" placeholder="Cari nama atau ID siswa..." oninput="renderStudentsTable()">
+              <select class="input-control" id="filterStudentStatus" onchange="renderStudentsTable()" style="max-width: 150px;">
+                <option value="ALL">Semua Status</option>
+                <option value="Aktif">Aktif</option>
+                <option value="Cuti">Cuti</option>
+                <option value="Lulus">Lulus</option>
+              </select>
+            </div>
+            <button class="btn btn-primary" onclick="openStudentModal()">+ Tambah Siswa Baru</button>
+          </div>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Nama Siswa</th>
+                <th>Usia/Tingkat</th>
+                <th>Bahasa Pemrograman</th>
+                <th>Sistem Belajar</th>
+                <th>Sisa Sesi Paket</th>
+                <th>Status</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="studentsTableBody">
+              <tr><td colspan="8" class="empty-state"><div class="spinner"></div> Memuat data siswa...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 3. LOG PERTEMUAN TAB -->
+      <div id="tab-logs" class="tab-pane">
+        <div class="table-container">
+          <div class="table-header-bar">
+            <div class="search-filter-box">
+              <input type="text" class="input-control" id="searchLog" placeholder="Cari nama siswa atau materi..." oninput="renderLogsTable()">
+            </div>
+            <button class="btn btn-primary" onclick="openLogModal()">+ Catat Log Pertemuan</button>
+          </div>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Tanggal</th>
+                <th>ID</th>
+                <th>Nama Siswa</th>
+                <th>Sesi Ke</th>
+                <th>Materi Coding</th>
+                <th>Rating</th>
+                <th>Presensi</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="logsTableBody">
+              <tr><td colspan="8" class="empty-state"><div class="spinner"></div> Memuat log pertemuan...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 4. KEUANGAN & PEMBAYARAN TAB -->
+      <div id="tab-payments" class="tab-pane">
+        <div class="table-container">
+          <div class="table-header-bar">
+            <div class="search-filter-box">
+              <input type="text" class="input-control" id="searchPayment" placeholder="Cari transaksi pembayaran..." oninput="renderPaymentsTable()">
+              <select class="input-control" id="filterPaymentStatus" onchange="renderPaymentsTable()" style="max-width: 160px;">
+                <option value="ALL">Semua Status</option>
+                <option value="Lunas">Lunas</option>
+                <option value="Belum Bayar">Belum Bayar</option>
+              </select>
+            </div>
+            <button class="btn btn-primary" onclick="openPaymentModal()">+ Catat Pembayaran</button>
+          </div>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Tanggal</th>
+                <th>Nama Siswa</th>
+                <th>Periode / Paket</th>
+                <th>Nominal</th>
+                <th>Metode</th>
+                <th>Status</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="paymentsTableBody">
+              <tr><td colspan="7" class="empty-state"><div class="spinner"></div> Memuat data keuangan...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: DATA SISWA -->
+  <div class="modal-overlay" id="studentModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title" id="studentModalTitle">Tambah Siswa Baru</h3>
+        <button class="modal-close" onclick="closeStudentModal()">&times;</button>
+      </div>
+      <form id="studentForm" onsubmit="saveStudentForm(event)">
+        <div class="modal-body">
+          <input type="hidden" id="studentRow">
+          <div class="form-group">
+            <label class="form-label">ID Siswa (Auto jika kosong)</label>
+            <input type="text" class="input-control" id="studentId" placeholder="contoh: COD-001">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Nama Lengkap Siswa *</label>
+            <input type="text" class="input-control" id="studentName" required placeholder="Nama Siswa">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Usia / Tingkat Sekolah</label>
+            <input type="text" class="input-control" id="studentAge" placeholder="contoh: SMP Kelas 8">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Kontak Email Orang Tua *</label>
+            <input type="email" class="input-control" id="studentContact" placeholder="email.ortu@example.com">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Bahasa Pemrograman</label>
+            <select class="input-control" id="studentLanguage">
+              <option value="Python">Python</option>
+              <option value="Web Dev (HTML/CSS/JS)">Web Dev (HTML/CSS/JS)</option>
+              <option value="Scratch">Scratch</option>
+              <option value="Java">Java</option>
+              <option value="C++">C++</option>
+              <option value="Mobile App (Flutter/React Native)">Mobile App (Flutter/React Native)</option>
+              <option value="Data Science">Data Science</option>
+              <option value="Lainnya">Lainnya</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Catatan Jadwal (Opsional / Fleksibel)</label>
+            <input type="text" class="input-control" id="studentSchedule" placeholder="Fleksibel (Sesuai Kesepakatan)">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Sistem Belajar</label>
+            <select class="input-control" id="studentSystem">
+              <option value="Paket">Paket (8 Sesi)</option>
+              <option value="Bulanan">Bulanan</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Status Siswa</label>
+            <select class="input-control" id="studentStatus">
+              <option value="Aktif">Aktif</option>
+              <option value="Cuti">Cuti</option>
+              <option value="Lulus">Lulus</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeStudentModal()">Batal</button>
+          <button type="submit" class="btn btn-primary">Simpan Data</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: LOG PERTEMUAN -->
+  <div class="modal-overlay" id="logModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title" id="logModalTitle">Catat Log Pertemuan</h3>
+        <button class="modal-close" onclick="closeLogModal()">&times;</button>
+      </div>
+      <form id="logForm" onsubmit="saveLogForm(event)">
+        <div class="modal-body">
+          <input type="hidden" id="logRow">
+          <div class="form-group">
+            <label class="form-label">Tanggal & Waktu Pertemuan *</label>
+            <input type="datetime-local" class="input-control" id="logDate" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Nama Siswa *</label>
+            <select class="input-control" id="logStudentName" required></select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Pertemuan Ke *</label>
+            <input type="number" class="input-control" id="logSessionNum" min="1" value="1" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Materi Coding Yang Dipelajari</label>
+            <input type="text" class="input-control" id="logTopic" placeholder="contoh: Loops & Functions Python">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Progress Project / Tugas</label>
+            <input type="text" class="input-control" id="logProgress" placeholder="contoh: Game Tic-Tac-Toe 80%">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Rating Pemahaman (1 - 5)</label>
+            <select class="input-control" id="logRating">
+              <option value="5">⭐⭐⭐⭐⭐ (5 - Sangat Paham)</option>
+              <option value="4">⭐⭐⭐⭐ (4 - Cepat Paham)</option>
+              <option value="3">⭐⭐⭐ (3 - Cukup)</option>
+              <option value="2">⭐⭐ (2 - Butuh Bimbingan)</option>
+              <option value="1">⭐ (1 - Kesulitan)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Catatan Evaluasi / Hambatan</label>
+            <textarea class="input-control" id="logNotes" rows="2" placeholder="Catatan perkembangan siswa..."></textarea>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Status Kehadiran</label>
+            <select class="input-control" id="logStatus">
+              <option value="Hadir">Hadir</option>
+              <option value="Izin">Izin</option>
+              <option value="Alfa">Alfa</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeLogModal()">Batal</button>
+          <button type="submit" class="btn btn-primary">Simpan Log</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: KEUANGAN & PEMBAYARAN -->
+  <div class="modal-overlay" id="paymentModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title" id="paymentModalTitle">Catat Pembayaran Tagihan</h3>
+        <button class="modal-close" onclick="closePaymentModal()">&times;</button>
+      </div>
+      <form id="paymentForm" onsubmit="savePaymentForm(event)">
+        <div class="modal-body">
+          <input type="hidden" id="paymentRow">
+          <div class="form-group">
+            <label class="form-label">Nama Siswa *</label>
+            <select class="input-control" id="paymentStudentName" required></select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Periode / Jenis Paket *</label>
+            <input type="text" class="input-control" id="paymentPeriode" placeholder="contoh: Paket 8 Sesi / Juli 2026" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Nominal (Rp) *</label>
+            <input type="number" class="input-control" id="paymentNominal" placeholder="1200000" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Metode Pembayaran</label>
+            <select class="input-control" id="paymentMethod">
+              <option value="BCA">BCA</option>
+              <option value="Mandiri">Mandiri</option>
+              <option value="BNI">BNI</option>
+              <option value="BRI">BRI</option>
+              <option value="E-Wallet (GoPay/OVO/Dana)">E-Wallet (GoPay/OVO/Dana)</option>
+              <option value="Cash">Cash</option>
+              <option value="Lainnya">Lainnya</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Status Pembayaran</label>
+            <select class="input-control" id="paymentStatus">
+              <option value="Lunas">Lunas</option>
+              <option value="Belum Bayar">Belum Bayar</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closePaymentModal()">Batal</button>
+          <button type="submit" class="btn btn-primary">Simpan Transaksi</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script>
+    // State Application
+    let currentTab = 'dashboard';
+    let rawStudents = [];
+    let rawLogs = [];
+    let rawPayments = [];
+
+    // Initialize App on load
+    window.addEventListener('DOMContentLoaded', () => {
+      loadDashboard();
+    });
+
+    function switchTab(tabId, btnElement) {
+      currentTab = tabId;
+      document.querySelectorAll('.nav-item button').forEach(b => b.classList.remove('active'));
+      btnElement.classList.add('active');
+
+      document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+      document.getElementById('tab-' + tabId).classList.add('active');
+
+      const titleMap = {
+        'dashboard': '📊 Dashboard Ringkasan',
+        'students': '👨‍🎓 Data Master Siswa',
+        'logs': '📝 Log Pertemuan Harian',
+        'payments': '💳 Keuangan & Tagihan Pembayaran'
+      };
+      document.getElementById('pageTitle').innerHTML = titleMap[tabId];
+
+      refreshCurrentTab();
+    }
+
+    function refreshCurrentTab() {
+      if (currentTab === 'dashboard') loadDashboard();
+      if (currentTab === 'students') loadStudents();
+      if (currentTab === 'logs') loadLogs();
+      if (currentTab === 'payments') loadPayments();
+    }
+
+    /* -------------------------------------------------------------------------- */
+    /* 1. DASHBOARD LOGIC                                                         */
+    /* -------------------------------------------------------------------------- */
+    function loadDashboard() {
+      google.script.run
+        .withSuccessHandler(data => {
+          document.getElementById('dashActiveStudents').innerText = data.activeStudentsCount;
+          document.getElementById('dashMonthlyIncome').innerText = 'Rp ' + Number(data.monthlyIncome).toLocaleString('id-ID');
+          document.getElementById('dashUnpaidCount').innerText = data.unpaidCount;
+          document.getElementById('dashTotalSessions').innerText = data.totalSessions;
+
+          const tbody = document.getElementById('dashUnpaidTableBody');
+          if (!data.unpaidList || data.unpaidList.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="5" class="empty-state">🎉 Tidak ada tagihan yang tertunda!</td></tr>';
+            return;
+          }
+
+          tbody.innerHTML = data.unpaidList.map(item => `
+            <tr>
+              <td>${item.date}</td>
+              <td><strong>${item.name}</strong></td>
+              <td>${item.periode}</td>
+              <td><strong style="color: #f87171;">Rp ${Number(item.nominal).toLocaleString('id-ID')}</strong></td>
+              <td>${item.contact}</td>
+            </tr>
+          `).join('');
+        })
+        .withFailureHandler(showError)
+        .getDashboardData();
+    }
+
+    /* -------------------------------------------------------------------------- */
+    /* 2. STUDENTS CRUD LOGIC                                                     */
+    /* -------------------------------------------------------------------------- */
+    function loadStudents() {
+      google.script.run
+        .withSuccessHandler(data => {
+          rawStudents = data;
+          renderStudentsTable();
+          populateStudentSelects();
+        })
+        .withFailureHandler(showError)
+        .getStudents();
+    }
+
+    function renderStudentsTable() {
+      const query = document.getElementById('searchStudent').value.toLowerCase();
+      const statusFilter = document.getElementById('filterStudentStatus').value;
+
+      const filtered = rawStudents.filter(s => {
+        const matchSearch = s.name.toLowerCase().includes(query) || s.id.toLowerCase().includes(query);
+        const matchStatus = statusFilter === 'ALL' || s.status === statusFilter;
+        return matchSearch && matchStatus;
+      });
+
+      const tbody = document.getElementById('studentsTableBody');
+      if (filtered.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="8" class="empty-state">Tidak ada data siswa ditemukan.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(s => {
+        let badgeClass = s.status === 'Aktif' ? 'badge-success' : s.status === 'Cuti' ? 'badge-warning' : 'badge-danger';
+        return `
+          <tr>
+            <td><code>${s.id}</code></td>
+            <td><strong>${s.name}</strong></td>
+            <td>${s.age || '-'}</td>
+            <td>${s.language || '-'}</td>
+            <td>${s.system}</td>
+            <td><strong style="color: var(--accent-blue);">${s.quota}</strong></td>
+            <td><span class="badge ${badgeClass}">${s.status}</span></td>
+            <td>
+              <button class="btn btn-secondary btn-icon-only" onclick="editStudent(${s.row})">✏️</button>
+              <button class="btn btn-danger btn-icon-only" onclick="confirmDeleteStudent(${s.row}, '${s.name}')">🗑️</button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function openStudentModal(row = null) {
+      document.getElementById('studentForm').reset();
+      document.getElementById('studentRow').value = '';
+      document.getElementById('studentModalTitle').innerText = 'Tambah Siswa Baru';
+
+      if (row) {
+        const s = rawStudents.find(item => item.row === row);
+        if (s) {
+          document.getElementById('studentModalTitle').innerText = 'Edit Data Siswa';
+          document.getElementById('studentRow').value = s.row;
+          document.getElementById('studentId').value = s.id;
+          document.getElementById('studentName').value = s.name;
+          document.getElementById('studentAge').value = s.age;
+          document.getElementById('studentContact').value = s.contact;
+          document.getElementById('studentLanguage').value = s.language;
+          document.getElementById('studentSchedule').value = s.schedule;
+          document.getElementById('studentSystem').value = s.system;
+          document.getElementById('studentStatus').value = s.status;
+        }
+      }
+
+      document.getElementById('studentModal').classList.add('active');
+    }
+
+    function closeStudentModal() {
+      document.getElementById('studentModal').classList.remove('active');
+    }
+
+    function editStudent(row) {
+      openStudentModal(row);
+    }
+
+    function saveStudentForm(e) {
+      e.preventDefault();
+      const payload = {
+        row: document.getElementById('studentRow').value,
+        id: document.getElementById('studentId').value,
+        name: document.getElementById('studentName').value,
+        age: document.getElementById('studentAge').value,
+        contact: document.getElementById('studentContact').value,
+        language: document.getElementById('studentLanguage').value,
+        schedule: document.getElementById('studentSchedule').value,
+        system: document.getElementById('studentSystem').value,
+        status: document.getElementById('studentStatus').value
+      };
+
+      google.script.run
+        .withSuccessHandler(res => {
+          closeStudentModal();
+          showToast(res.message);
+          loadStudents();
+        })
+        .withFailureHandler(showError)
+        .saveStudent(payload);
+    }
+
+    function confirmDeleteStudent(row, name) {
+      if (confirm(`Apakah Anda yakin ingin menghapus data siswa '${name}'?`)) {
+        google.script.run
+          .withSuccessHandler(res => {
+            showToast(res.message);
+            loadStudents();
+          })
+          .withFailureHandler(showError)
+          .deleteStudent(row);
+      }
+    }
+
+    /* -------------------------------------------------------------------------- */
+    /* 3. LOGS CRUD LOGIC                                                         */
+    /* -------------------------------------------------------------------------- */
+    function loadLogs() {
+      google.script.run
+        .withSuccessHandler(data => {
+          rawLogs = data;
+          renderLogsTable();
+        })
+        .withFailureHandler(showError)
+        .getLogs();
+    }
+
+    function renderLogsTable() {
+      const query = document.getElementById('searchLog').value.toLowerCase();
+      const filtered = rawLogs.filter(l => l.studentName.toLowerCase().includes(query) || l.topic.toLowerCase().includes(query));
+
+      const tbody = document.getElementById('logsTableBody');
+      if (filtered.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="8" class="empty-state">Tidak ada log pertemuan ditemukan.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(l => {
+        let stars = '⭐'.repeat(l.rating);
+        let badgeClass = l.status === 'Hadir' ? 'badge-success' : l.status === 'Izin' ? 'badge-warning' : 'badge-danger';
+        return `
+          <tr>
+            <td>${l.date}</td>
+            <td><code>${l.studentId}</code></td>
+            <td><strong>${l.studentName}</strong></td>
+            <td>#${l.sessionNum}</td>
+            <td>${l.topic}</td>
+            <td>${stars}</td>
+            <td><span class="badge ${badgeClass}">${l.status}</span></td>
+            <td>
+              <button class="btn btn-secondary btn-icon-only" onclick="editLog(${l.row})">✏️</button>
+              <button class="btn btn-danger btn-icon-only" onclick="confirmDeleteLog(${l.row})">🗑️</button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function openLogModal(row = null) {
+      document.getElementById('logForm').reset();
+      document.getElementById('logRow').value = '';
+      document.getElementById('logModalTitle').innerText = 'Catat Log Pertemuan';
+
+      let now = new Date();
+      now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+      document.getElementById('logDate').value = now.toISOString().slice(0, 16);
+
+      if (row) {
+        const l = rawLogs.find(item => item.row === row);
+        if (l) {
+          document.getElementById('logModalTitle').innerText = 'Edit Log Pertemuan';
+          document.getElementById('logRow').value = l.row;
+          if (l.rawDateIso) document.getElementById('logDate').value = l.rawDateIso;
+          document.getElementById('logStudentName').value = l.studentName;
+          document.getElementById('logSessionNum').value = l.sessionNum;
+          document.getElementById('logTopic').value = l.topic;
+          document.getElementById('logProgress').value = l.progress;
+          document.getElementById('logRating').value = l.rating;
+          document.getElementById('logNotes').value = l.notes;
+          document.getElementById('logStatus').value = l.status;
+        }
+      }
+
+      document.getElementById('logModal').classList.add('active');
+    }
+
+    function closeLogModal() {
+      document.getElementById('logModal').classList.remove('active');
+    }
+
+    function editLog(row) {
+      openLogModal(row);
+    }
+
+    function saveLogForm(e) {
+      e.preventDefault();
+      const payload = {
+        row: document.getElementById('logRow').value,
+        date: document.getElementById('logDate').value,
+        studentName: document.getElementById('logStudentName').value,
+        sessionNum: document.getElementById('logSessionNum').value,
+        topic: document.getElementById('logTopic').value,
+        progress: document.getElementById('logProgress').value,
+        rating: document.getElementById('logRating').value,
+        notes: document.getElementById('logNotes').value,
+        status: document.getElementById('logStatus').value
+      };
+
+      google.script.run
+        .withSuccessHandler(res => {
+          closeLogModal();
+          showToast(res.message);
+          loadLogs();
+        })
+        .withFailureHandler(showError)
+        .saveLog(payload);
+    }
+
+    function confirmDeleteLog(row) {
+      if (confirm('Hapus log pertemuan ini?')) {
+        google.script.run
+          .withSuccessHandler(res => {
+            showToast(res.message);
+            loadLogs();
+          })
+          .withFailureHandler(showError)
+          .deleteLog(row);
+      }
+    }
+
+    /* -------------------------------------------------------------------------- */
+    /* 4. PAYMENTS CRUD LOGIC                                                     */
+    /* -------------------------------------------------------------------------- */
+    function loadPayments() {
+      google.script.run
+        .withSuccessHandler(data => {
+          rawPayments = data;
+          renderPaymentsTable();
+        })
+        .withFailureHandler(showError)
+        .getPayments();
+    }
+
+    function renderPaymentsTable() {
+      const query = document.getElementById('searchPayment').value.toLowerCase();
+      const statusFilter = document.getElementById('filterPaymentStatus').value;
+
+      const filtered = rawPayments.filter(p => {
+        const matchSearch = p.studentName.toLowerCase().includes(query) || p.periode.toLowerCase().includes(query);
+        const matchStatus = statusFilter === 'ALL' || p.status === statusFilter;
+        return matchSearch && matchStatus;
+      });
+
+      const tbody = document.getElementById('paymentsTableBody');
+      if (filtered.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" class="empty-state">Tidak ada transaksi pembayaran ditemukan.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(p => {
+        let badgeClass = p.status === 'Lunas' ? 'badge-success' : 'badge-danger';
+        return `
+          <tr>
+            <td>${p.date}</td>
+            <td><strong>${p.studentName}</strong></td>
+            <td>${p.periode}</td>
+            <td><strong>Rp ${Number(p.nominal).toLocaleString('id-ID')}</strong></td>
+            <td>${p.method}</td>
+            <td><span class="badge ${badgeClass}">${p.status}</span></td>
+            <td>
+              <button class="btn btn-secondary btn-icon-only" onclick="editPayment(${p.row})">✏️</button>
+              <button class="btn btn-danger btn-icon-only" onclick="confirmDeletePayment(${p.row})">🗑️</button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function openPaymentModal(row = null) {
+      document.getElementById('paymentForm').reset();
+      document.getElementById('paymentRow').value = '';
+      document.getElementById('paymentModalTitle').innerText = 'Catat Pembayaran Tagihan';
+
+      if (row) {
+        const p = rawPayments.find(item => item.row === row);
+        if (p) {
+          document.getElementById('paymentModalTitle').innerText = 'Edit Transaksi Pembayaran';
+          document.getElementById('paymentRow').value = p.row;
+          document.getElementById('paymentStudentName').value = p.studentName;
+          document.getElementById('paymentPeriode').value = p.periode;
+          document.getElementById('paymentNominal').value = p.nominal;
+          document.getElementById('paymentMethod').value = p.method;
+          document.getElementById('paymentStatus').value = p.status;
+        }
+      }
+
+      document.getElementById('paymentModal').classList.add('active');
+    }
+
+    function closePaymentModal() {
+      document.getElementById('paymentModal').classList.remove('active');
+    }
+
+    function editPayment(row) {
+      openPaymentModal(row);
+    }
+
+    function savePaymentForm(e) {
+      e.preventDefault();
+      const payload = {
+        row: document.getElementById('paymentRow').value,
+        studentName: document.getElementById('paymentStudentName').value,
+        periode: document.getElementById('paymentPeriode').value,
+        nominal: document.getElementById('paymentNominal').value,
+        method: document.getElementById('paymentMethod').value,
+        status: document.getElementById('paymentStatus').value
+      };
+
+      google.script.run
+        .withSuccessHandler(res => {
+          closePaymentModal();
+          showToast(res.message);
+          loadPayments();
+        })
+        .withFailureHandler(showError)
+        .savePayment(payload);
+    }
+
+    function confirmDeletePayment(row) {
+      if (confirm('Hapus transaksi pembayaran ini?')) {
+        google.script.run
+          .withSuccessHandler(res => {
+            showToast(res.message);
+            loadPayments();
+          })
+          .withFailureHandler(showError)
+          .deletePayment(row);
+      }
+    }
+
+    /* -------------------------------------------------------------------------- */
+    /* HELPER FUNCTIONS                                                           */
+    /* -------------------------------------------------------------------------- */
+    function populateStudentSelects() {
+      const activeStudents = rawStudents.filter(s => s.status !== 'Lulus');
+      const optionsHtml = activeStudents.length > 0 
+        ? activeStudents.map(s => `<option value="${s.name}">${s.name} (${s.id})</option>`).join('')
+        : '<option value="">(Belum Ada Siswa)</option>';
+
+      document.getElementById('logStudentName').innerHTML = optionsHtml;
+      document.getElementById('paymentStudentName').innerHTML = optionsHtml;
+    }
+
+    function triggerEmailReminders() {
+      if (confirm('Buat draft email pengingat di Gmail untuk seluruh tagihan Belum Bayar?')) {
+        google.script.run
+          .withSuccessHandler(res => {
+            showToast(res.message || 'Draft email pengingat berhasil dibuat!');
+          })
+          .withFailureHandler(showError)
+          .sendPaymentReminders();
+      }
+    }
+
+    function showToast(msg) {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.innerHTML = `<span>✅</span> ${msg}`;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.remove();
+      }, 4000);
+    }
+
+    function showError(err) {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.style.borderColor = 'var(--accent-red)';
+      toast.innerHTML = `<span style="color:var(--accent-red)">⚠️ Error:</span> ${err.message || err}`;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.remove();
+      }, 5000);
+    }
+  </script>
+</body>
+</html>
