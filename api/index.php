@@ -1,6 +1,11 @@
 <?php
 
-// Fix Vercel Serverless Read-Only Filesystem for Laravel Bootstrap & Storage
+// Fix Vercel Serverless Read-Only Filesystem for Laravel
+$tmpStorage = '/tmp/storage';
+
+putenv('VIEW_COMPILED_PATH=' . $tmpStorage . '/framework/views');
+$_ENV['VIEW_COMPILED_PATH'] = $tmpStorage . '/framework/views';
+
 putenv('APP_SERVICES_CACHE=/tmp/services.php');
 putenv('APP_PACKAGES_CACHE=/tmp/packages.php');
 putenv('APP_CONFIG_CACHE=/tmp/config.php');
