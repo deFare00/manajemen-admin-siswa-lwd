@@ -232,7 +232,7 @@
             <button class="btn btn-primary" onclick="openLogModal()">+ Catat Log</button>
           </div>
           <table class="data-table">
-            <thead><tr><th>Tanggal & Waktu</th><th>ID</th><th>Nama</th><th>Sesi</th><th>Materi</th><th>Rating</th><th>Presensi</th><th>Aksi</th></tr></thead>
+            <thead><tr><th>Tanggal & Waktu</th><th>ID</th><th>Nama Siswa</th><th>Sesi</th><th>Materi Coding</th><th>Rating</th><th>Presensi</th><th>Aksi Detail</th></tr></thead>
             <tbody id="logsBody"></tbody>
           </table>
         </div>
@@ -298,13 +298,49 @@
           <div class="form-group"><label class="form-label">Rating Pemahaman (1-5)</label>
             <select class="input-control" id="logRating"><option value="5">⭐⭐⭐⭐⭐ (5)</option><option value="4">⭐⭐⭐⭐ (4)</option><option value="3">⭐⭐⭐ (3)</option><option value="2">⭐⭐ (2)</option><option value="1">⭐ (1)</option></select>
           </div>
-          <div class="form-group"><label class="form-label">Catatan Evaluasi</label><textarea class="input-control" id="logNotes" rows="2" placeholder="Catatan perkembangan siswa..."></textarea></div>
+          <div class="form-group"><label class="form-label">Catatan Evaluasi Perkembangan Siswa</label><textarea class="input-control" id="logNotes" rows="3" placeholder="Tuliskan catatan perkembangan, kendala, atau prestasi siswa..."></textarea></div>
           <div class="form-group"><label class="form-label">Status Kehadiran</label>
             <select class="input-control" id="logAttendance"><option value="Hadir">Hadir</option><option value="Izin">Izin</option><option value="Alfa">Alfa</option></select>
           </div>
         </div>
         <div class="modal-footer"><button type="button" class="btn btn-secondary" onclick="closeModal('logModal')">Batal</button><button type="submit" class="btn btn-primary">Simpan</button></div>
       </form>
+    </div>
+  </div>
+
+  <!-- MODAL DETAIL LOG PERTEMUAN & EVALUASI -->
+  <div class="modal-overlay" id="logDetailModal">
+    <div class="modal-card" style="max-width: 600px;">
+      <div class="modal-header">
+        <h3 style="display:flex; align-items:center; gap:0.5rem; color:#60a5fa;">📄 Detail Log Pertemuan & Evaluasi</h3>
+        <button type="button" style="background:none; border:none; color:white; font-size:1.5rem; cursor:pointer;" onclick="closeModal('logDetailModal')">&times;</button>
+      </div>
+      <div class="modal-body" style="gap:1.2rem;">
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:1rem; background:#162032; padding:1rem; border-radius:8px; border:1px solid var(--border-color);">
+          <div><div style="font-size:0.75rem; color:var(--text-muted);">NAMA SISWA</div><strong id="detailStudentName" style="font-size:1rem; color:white;">-</strong></div>
+          <div><div style="font-size:0.75rem; color:var(--text-muted);">SESI KE-</div><strong id="detailSessionNum" style="font-size:1rem; color:var(--accent-blue);">-</strong></div>
+          <div><div style="font-size:0.75rem; color:var(--text-muted);">TANGGAL & WAKTU</div><div id="detailMeetingDate" style="font-size:0.9rem; color:white;">-</div></div>
+          <div><div style="font-size:0.75rem; color:var(--text-muted);">PRESENSI & RATING</div><div id="detailRating" style="font-size:0.9rem;">-</div></div>
+        </div>
+
+        <div style="background:#0f172a; padding:1rem; border-radius:8px; border:1px solid var(--border-color);">
+          <div style="font-size:0.78rem; font-weight:700; color:var(--accent-blue); text-transform:uppercase; margin-bottom:0.4rem;">💻 MATERI CODING</div>
+          <div id="detailTopic" style="font-size:0.95rem; color:white; font-weight:600;">-</div>
+        </div>
+
+        <div style="background:#0f172a; padding:1rem; border-radius:8px; border:1px solid var(--border-color);">
+          <div style="font-size:0.78rem; font-weight:700; color:var(--accent-green); text-transform:uppercase; margin-bottom:0.4rem;">🚀 PROGRESS PROJECT</div>
+          <div id="detailProgress" style="font-size:0.9rem; color:white;">-</div>
+        </div>
+
+        <div style="background:linear-gradient(135deg, rgba(30, 41, 59, 0.9), rgba(15, 23, 42, 0.9)); padding:1.2rem; border-radius:8px; border:1px solid #3b82f6;">
+          <div style="font-size:0.8rem; font-weight:700; color:#fbbf24; text-transform:uppercase; margin-bottom:0.5rem; display:flex; align-items:center; gap:0.4rem;">📝 CATATAN EVALUASI PERKEMBANGAN</div>
+          <div id="detailNotes" style="font-size:0.95rem; color:#f8fafc; line-height:1.6; white-space:pre-wrap;">-</div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="closeModal('logDetailModal')">Tutup</button>
+      </div>
     </div>
   </div>
 
@@ -491,13 +527,32 @@
           <td>${l.meeting_date ? l.meeting_date.substring(0, 16).replace('T', ' ') : '-'}</td>
           <td><code>${l.student ? l.student.student_code : '-'}</code></td>
           <td><strong>${l.student ? l.student.name : '-'}</strong></td>
-          <td>#${l.session_number}</td>
+          <td><strong style="color:var(--accent-blue)">#${l.session_number}</strong></td>
           <td>${l.topic}</td>
           <td>${'⭐'.repeat(l.rating)}</td>
           <td><span class="badge ${l.attendance_status==='Hadir'?'badge-success':'badge-warning'}">${l.attendance_status}</span></td>
-          <td><button class="btn btn-secondary" onclick="openLogModal(${l.id})">✏️</button> <button class="btn btn-danger" onclick="deleteLog(${l.id})">🗑️</button></td>
+          <td>
+            <button class="btn btn-primary" style="padding:0.35rem 0.65rem; font-size:0.8rem;" onclick="viewLogDetail(${l.id})">👁️ Detail & Evaluasi</button>
+            <button class="btn btn-secondary" style="padding:0.35rem 0.6rem; font-size:0.8rem;" onclick="openLogModal(${l.id})">✏️</button>
+            <button class="btn btn-danger" style="padding:0.35rem 0.6rem; font-size:0.8rem;" onclick="deleteLog(${l.id})">🗑️</button>
+          </td>
         </tr>
       `).join('');
+    }
+
+    function viewLogDetail(id) {
+      let l = rawLogs.find(i => i.id === id);
+      if (!l) return;
+
+      document.getElementById('detailStudentName').innerText = (l.student ? l.student.name : '-') + ' (' + (l.student ? l.student.student_code : '-') + ')';
+      document.getElementById('detailSessionNum').innerText = 'Sesi #' + l.session_number;
+      document.getElementById('detailMeetingDate').innerText = l.meeting_date ? l.meeting_date.substring(0, 16).replace('T', ' ') : '-';
+      document.getElementById('detailRating').innerHTML = '⭐'.repeat(l.rating) + ' <span class="badge ' + (l.attendance_status==='Hadir'?'badge-success':'badge-warning') + '">' + l.attendance_status + '</span>';
+      document.getElementById('detailTopic').innerText = l.topic || '-';
+      document.getElementById('detailProgress').innerText = l.project_progress || 'Belum ada catatan progress.';
+      document.getElementById('detailNotes').innerText = l.evaluation_notes || 'Tidak ada catatan evaluasi khusus untuk sesi ini.';
+
+      document.getElementById('logDetailModal').classList.add('active');
     }
 
     function openLogModal(id=null) {
